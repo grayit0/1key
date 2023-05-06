@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# 检查是否已经挂载到 /data
+if [ -d "/data" ]; then
+    echo "Hard drive already mounted at /data"
+    exit 0
+fi
+
+# 获取未分配的磁盘信息
+disk=$(lsblk -o NAME,SIZE,FSTYPE -dn | awk '$3 == "" {print $1}' | head -n 1)
+
+if [ -z "$disk" ]; then
+    echo "No unformatted disks found"
+    exit 1
+fi
+
+# 将磁盘分区并格式化为 ext4 文件系统
+parted -s "/dev/$disk" -- mklabel gpt \
+                      mkpart primary ext4 1MiB -1MiB \
+                      set 1 msftdata on
+mkfs.ext4 "/dev/${disk}1"
+
+# 挂载到 /data 目录
+mkdir -p /data
+mount "/dev/${disk}1" /data
+
+echo "Hard drive successfully mounted to /data"
+exit 0
