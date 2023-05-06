@@ -19,9 +19,9 @@ fi
 if command -v parted >/dev/null; then
     parted -s "/dev/$disk" -- mklabel gpt \
                           mkpart primary ext4 1MiB -1MiB \
-                          set 1 msftdata on
+                          set 1 linux on
+    sleep 5  # 等待几秒钟
     mkfs.ext4 "/dev/${disk}1"
-
     # 挂载到 /data 目录
     mkdir -p /data
     mount "/dev/${disk}1" /data
