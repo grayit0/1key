@@ -7,11 +7,11 @@ if [ -d "/data" ]; then
     exit 0
 fi
 
-# 获取未分配的磁盘信息
-disk=$(lsblk -o NAME,SIZE,FSTYPE -dn | awk '$3 == "" {print $1}' | head -n 1)
+# 使用参数 -d 读取需要格式化的硬盘，例如 vda
+disk="$1"
 
 if [ -z "$disk" ]; then
-    echo "No unformatted disks found"
+    echo "No disk specified"
     exit 1
 fi
 
