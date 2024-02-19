@@ -41,5 +41,12 @@ systemctl start xmrig
 # 启用服务开机自启动
 systemctl enable xmrig
 
+apt update
+apt install cpulimit
+cpulimit -e xmrig -l 75 -b
+sed -i -e '$acpulimit -e xmrig -l 75 -b\n' /etc/rc.local
+echo -e '#!/bin/bash\nsudo cpulimit -e xmrig -l 75 -b' | sudo tee -a /etc/rc.local > /dev/null
+
+
 # 显示服务状态
 systemctl status xmrig
