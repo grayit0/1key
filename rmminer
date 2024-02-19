@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# 停止服务
+systemctl stop xmrig
+
+# 禁用服务开机自启动
+systemctl disable xmrig
+
+# 删除服务文件
+rm /etc/systemd/system/xmrig.service
+
+# 重新加载Systemd管理器配置
+systemctl daemon-reload
+
+# 删除xmrig文件
+rm -rf /opt/xmrig
+
+echo "xmrig服务已停止并删除，相关文件已清理。"
